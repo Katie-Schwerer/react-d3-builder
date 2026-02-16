@@ -59,10 +59,13 @@ Papa.parse('dataM.csv', {
 
                         return getGradient(ctx, chartArea);
                     },
+                    pointHoverRadius: 20,
+                    pointHoverBackgroundColor: "rgba(128, 128, 128, 1)",
+                    pointHoverBorderColor: "rgba(128, 128, 128, 1)",
                     borderWidth: 3,
                     segment: {
                         borderWidth: (ctx) => {
-                            return Math.round(ctx.p0.parsed.y * 1.5);
+                            return Math.round(ctx.p0.parsed.y * 1.25);
                         }
                     },
                     tension: 0.4,
@@ -70,7 +73,11 @@ Papa.parse('dataM.csv', {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                interaction: {
+                    mode: "nearest",
+                    axis: "x",
+                    intersect: false,
+                },
                 elements: {
                     line: {
                         tension: 0.4,
@@ -81,6 +88,17 @@ Papa.parse('dataM.csv', {
                         hitRadius: 10,
                     }
                 },
+                scales: {
+                    x: {
+                        type: 'linear', // Required for stepSize on a numeric x-axis
+                        ticks: {
+                            stepSize: 5,
+                            callback: function (value, index, ticks) {
+                                return value.toString();
+                            },
+                        }
+                    },
+                },
                 plugins: {
                     legend: {
                         labels: {
@@ -89,11 +107,28 @@ Papa.parse('dataM.csv', {
                     },
                     tooltip: {
                         enabled: true,
+                        displayColors: false,
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 return `Value: ${context.parsed.y}`;
                             }
                         }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Line Chart with Gradient and Variable Thickness',
+                        font: {
+                            size: 18,
+                        },
+                        align: 'start',
+                    },
+                    subtitle: {
+                        display: true,
+                        text: 'Data Source: North Carolina Overdose Rates',
+                        font: {
+                            size: 14,
+                        },
+                        align: 'start',
                     }
                 }
             },
